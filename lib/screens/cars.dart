@@ -19,16 +19,19 @@ class _CarsState extends State<Cars> {
 
   @override
   Widget build(BuildContext context) {
-    print('render');
-    print(carList.length);
     return Scaffold(
         appBar: AppBar(title: const Text('My cars'), actions: [
           GestureDetector(
             child: const Icon(Icons.add),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
+            onTap: () async {
+              final car = await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const AddCar(),
               ));
+              if (car != null) {
+                setState(() {
+                  carList.add(car);
+                });
+              }
             },
           )
         ]),
