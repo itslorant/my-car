@@ -6,9 +6,9 @@ class Cars extends StatelessWidget {
   const Cars({super.key});
 
   final carList = const [
-    {'id': 1, 'brand': 'Opel', 'type': 'Astra', 'licencePlateNr': 'JEF-399'},
-    {'id': 2, 'brand': 'Skoda', 'type': 'Octavia', 'licencePlateNr': 'RHK-901'},
-    {'id': 3, 'brand': 'VW', 'type': 'Touran', 'licencePlateNr': 'OFOW72'}
+    {'id': 1, 'brand': 'Opel', 'type': 'Astra', 'licensePlateNr': 'JEF-399'},
+    {'id': 2, 'brand': 'Skoda', 'type': 'Octavia', 'licensePlateNr': 'RHK-901'},
+    {'id': 3, 'brand': 'VW', 'type': 'Touran', 'licensePlateNr': 'OFOW72'}
   ];
 
   @override
@@ -36,7 +36,7 @@ class Cars extends StatelessWidget {
                     children: [
                       Text(
                           '${carList[index]['brand']} ${carList[index]['type']}'),
-                      Text('${carList[index]['licencePlateNr']}'),
+                      Text('${carList[index]['licensePlateNr']}'),
                     ],
                   ),
                 )
