@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:my_car/models/car.dart';
+import 'package:my_car/widgets/car_image_picker.dart';
 
 class AddCar extends StatefulWidget {
   const AddCar({super.key});
@@ -14,15 +17,17 @@ class _AddCarState extends State<AddCar> {
   var _enteredBrand = '';
   var _enteredType = '';
   var _enteredLicensePlate = '';
+  File? _selectedImage;
 
   void _saveItem() {
     if (_formkey.currentState!.validate()) {
       _formkey.currentState!.save();
       Navigator.of(context).pop(Car(
-          id: '4',
+          id: '1',
           brand: _enteredBrand,
           type: _enteredType,
-          licensePlate: _enteredLicensePlate));
+          licensePlate: _enteredLicensePlate, 
+          image: _selectedImage!));
     }
     return;
   }
@@ -34,6 +39,11 @@ class _AddCarState extends State<AddCar> {
       body: Form(
         key: _formkey,
         child: Column(children: [
+          CarImagePicker(
+            onPickImage: (pickedImage) {
+              _selectedImage = pickedImage;
+            },
+          ),
           TextFormField(
             decoration: const InputDecoration(label: Text('Brand')),
             validator: (value) {
@@ -62,7 +72,9 @@ class _AddCarState extends State<AddCar> {
             decoration: const InputDecoration(label: Text('License plate')),
             autocorrect: false,
             validator: (value) {
-              if (value == null || value.trim().isEmpty || value.trim().length < 5) {
+              if (value == null ||
+                  value.trim().isEmpty ||
+                  value.trim().length < 5) {
                 return 'Must have at least 5 characters.';
               }
               return null;

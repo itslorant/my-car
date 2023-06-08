@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_car/data/dummy_expenses.dart';
 
 import 'package:my_car/models/car.dart';
 import 'package:my_car/models/expense.dart';
@@ -7,18 +8,12 @@ class CarDetailScreen extends StatelessWidget {
   CarDetailScreen({super.key, required this.car});
   final Car car;
 
-  final List<Expense> expenses = [
-    Expense(id: 'e-1', title: 'Oil change', price: 35.44, description: '5W40'),
-    Expense(
-        id: 'e-2',
-        title: 'Car wash',
-        price: 12.00,
-        description: 'Cleaner than ever'),
-  ];
 
   @override
   Widget build(BuildContext context) {
-  
+    final List<Expense> filteredExpenses =
+      expenses.where((expense) => expense.carId == car.id).toList();
+
     return Scaffold(
         appBar: AppBar(title: Text(car.licensePlate), actions: [
           GestureDetector(
@@ -27,7 +22,7 @@ class CarDetailScreen extends StatelessWidget {
           )
         ]),
         body: ListView.builder(
-            itemCount: expenses.length,
+            itemCount: filteredExpenses.length,
             itemBuilder: (context, index) => Card(
                   child: Column(children: [
                     Row(
@@ -37,15 +32,17 @@ class CarDetailScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              expenses[index].title,
+                              filteredExpenses[index].title,
                               style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
-                            const SizedBox(height: 5,),
-                            Text(expenses[index].description),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(filteredExpenses[index].description),
                           ],
                         ),
-                        Text(expenses[index].price.toString()),
+                        Text(filteredExpenses[index].price.toString()),
                       ],
                     ),
                   ]),
