@@ -1,4 +1,5 @@
 import 'package:my_car/models/expense.dart';
+import 'package:my_car/models/gas_expense.dart';
 
 final expenses = [
   Expense(
@@ -19,6 +20,26 @@ final expenses = [
       carId: '1',
       createdAt: DateTime.now().subtract(const Duration(days: 1)),
       odo: 110000),
+  GasExpense(
+      id: 'expense4',
+      title: 'Tire Change',
+      price: 100.79,
+      description: 'Tank fill up',
+      category: Category.gas,
+      carId: '1',
+      createdAt: DateTime.now().subtract(const Duration(days: 1)),
+      odo: 110000,
+      litre: 20.2),
+  GasExpense(
+      id: 'expense4',
+      title: 'Tire Change',
+      price: 86.77,
+      description: 'Extra fill',
+      category: Category.gas,
+      carId: '1',
+      createdAt: DateTime.now().subtract(const Duration(days: 1)),
+      odo: 110000,
+      litre: 15.8),
   Expense(
       id: 'expense1',
       title: 'Car Wash',
