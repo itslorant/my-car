@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 import 'package:my_car/data/dummy_expenses.dart';
 
 import 'package:my_car/models/car.dart';
 import 'package:my_car/models/expense.dart';
+import 'package:my_car/models/gas_expense.dart';
 import 'package:my_car/screens/new_expense.dart';
+import 'package:my_car/widgets/expense_item.dart';
+import 'package:my_car/widgets/gas_expense_item.dart';
 
 class CarDetailScreen extends StatefulWidget {
   CarDetailScreen({super.key, required this.car});
@@ -23,14 +26,28 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
     });
   }
 
+  IconData _getIcon(int pageIdx) {
+    switch (pageIdx) {
+      case 1:
+        return Icons.water_drop;
+      case 2:
+        return Icons.add_chart;
+      default:
+        return Icons.car_crash;
+    }
+  }
+
   _addExpense() async {
     final newExpense = await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => NewExpenseScreen(
               carId: widget.car.id,
             )));
-    setState(() {
-      expenses.add(newExpense);
-    });
+    print(newExpense);
+    if (newExpense != null) {
+      setState(() {
+        expenses.add(newExpense);
+      });
+    }
   }
 
   @override
@@ -52,41 +69,19 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
       body: ListView.builder(
         padding: const EdgeInsets.all(7),
         itemCount: filteredExpenses.length,
-        itemBuilder: (context, index) => Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          color: Colors.amber,
-          child: Container(
-            margin: const EdgeInsets.all(10),
-            child: Column(children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    filteredExpenses[index].title,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text('${filteredExpenses[index].odo.toString()} km'),
-                  Text(
-                    '${filteredExpenses[index].price.toString()} €',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
+        itemBuilder: (context, index) => Stack(
+          children: [
+            _selectedPageIndex == 1
+                ? GasExpenseItem(expense: filteredExpenses[index] as GasExpense)
+                : ExpenseItem(expense: filteredExpenses[index]),
+            CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 10,
+              child: Icon(
+                _getIcon(_selectedPageIndex), size: 15,
               ),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(filteredExpenses[index].description),
-                  Text(DateFormat.yMd()
-                      .addPattern(DateFormat.HOUR24_MINUTE)
-                      .format(filteredExpenses[index].createdAt.toLocal())),
-                ],
-              )
-            ]),
-          ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
