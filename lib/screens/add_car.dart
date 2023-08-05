@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:my_car/models/car.dart';
 import 'package:my_car/widgets/car_image_picker.dart';
@@ -20,15 +23,30 @@ class _AddCarState extends State<AddCar> {
   var _enteredLicensePlate = '';
   File? _selectedImage;
 
-  void _saveItem() {
+  void _saveItem() async {
     if (_formkey.currentState!.validate()) {
       _formkey.currentState!.save();
+      final uuid = Uuid();
+      final carId = uuid.v4();
+      
+      final storageRef = FirebaseStorage.instance.ref().child('car_images').child('$carId.jpg');
+      await storageRef.putFile(_selectedImage!);
+      final imageUrl = await storageRef.getDownloadURL();
+
+      DatabaseReference databaseRef = FirebaseDatabase.instance.ref('cars').child(carId);
+      await databaseRef.set({
+        "id": carId,
+        "brand": _enteredBrand,
+        "type": _enteredType,
+        "licensePlate": _enteredLicensePlate,
+        "image": imageUrl
+      });
       Navigator.of(context).pop(Car(
           id: '1',
           brand: _enteredBrand,
           type: _enteredType,
           licensePlate: _enteredLicensePlate,
-          image: _selectedImage!));
+          image: imageUrl));
     }
     return;
   }

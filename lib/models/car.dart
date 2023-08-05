@@ -13,5 +13,5 @@ class Car {
   final String brand;
   final String type;
   final String licensePlate;
-  final File image;
+  final String image;
 }
