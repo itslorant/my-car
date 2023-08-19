@@ -40,7 +40,7 @@ class ExpenseItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(expense.description),
-                  Text(DateFormat.yMd()
+                  Text(DateFormat("dd.MM.yyyy")
                       .addPattern(DateFormat.HOUR24_MINUTE)
                       .format(expense.createdAt.toLocal())),
                 ],
