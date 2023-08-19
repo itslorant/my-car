@@ -21,7 +21,7 @@ class _AuthScreenState extends State<AuthScreen> {
   void _submit() async {
     final isValid = _form.currentState!.validate();
 
-    if (!isValid || !_isLogin) {
+    if (!isValid) {
       return;
     }
     _form.currentState!.save();
@@ -56,6 +56,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Form(
+                    key: _form,
                     child: Column(
                       children: [
                         TextFormField(
@@ -110,7 +111,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           height: 12,
                         ),
                         ElevatedButton(
-                            onPressed: () {},
+                            onPressed: _submit,
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Theme.of(context)
                                     .colorScheme

@@ -1,12 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:my_car/models/car.dart';
 import 'package:my_car/screens/add_car.dart';
-import 'package:my_car/screens/car_detail.dart';
+import 'package:my_car/screens/auth.dart';
 import 'package:my_car/widgets/cars_list.dart';
 
 class CarsScreen extends StatefulWidget {
@@ -55,6 +52,7 @@ class _CarsState extends State<CarsScreen> {
           },
         )
       ]),
+      
       body: FutureBuilder(
         future: _getCars(),
         builder: (ctx, snapshot) =>

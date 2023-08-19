@@ -1,12 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:my_car/screens/auth.dart';
 import 'firebase_options.dart';
-
 
 import 'package:my_car/screens/cars.dart';
 
 void main() async {
-   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -22,9 +23,19 @@ class App extends StatelessWidget {
         title: 'My car',
         theme: ThemeData().copyWith(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blue),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         ),
-        home: const CarsScreen());
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            }
+            if (snapshot.hasData) {
+              return const CarsScreen();
+            }
+            return const AuthScreen();
+          },
+        ),);
   }
 }

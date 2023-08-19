@@ -10,7 +10,7 @@ import 'package:my_car/widgets/expense_item.dart';
 import 'package:my_car/widgets/gas_expense_item.dart';
 
 class CarDetailScreen extends StatefulWidget {
-  CarDetailScreen({super.key, required this.car});
+  const CarDetailScreen({super.key, required this.car});
   final Car car;
 
   @override
