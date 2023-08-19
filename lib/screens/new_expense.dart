@@ -1,8 +1,9 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:my_car/models/expense.dart';
-import 'package:my_car/models/gas_expense.dart';
+import 'package:uuid/uuid.dart';
 
+import 'package:my_car/models/expense.dart';
 class NewExpenseScreen extends StatefulWidget {
   const NewExpenseScreen({super.key, required this.carId});
 
@@ -21,32 +22,34 @@ class _NewExpenseState extends State<NewExpenseScreen> {
   var _enteredDescription = '';
   var _enteredLitre = 0.0;
 
-  void _saveExpense() {
+  void _saveExpense() async {
     if (_formkey.currentState!.validate()) {
       _formkey.currentState!.save();
-      if (_selectedCategory == Category.gas) {
-        Navigator.of(context).pop(GasExpense(
-            id: 'ge5',
-            title: _enteredTitle,
-            price: _enteredPrice,
-            description: _enteredDescription,
-            category: _selectedCategory,
-            carId: widget.carId,
-            createdAt: DateTime.now(),
-            odo: _enteredOdo,
-            litre: _enteredLitre));
-      }
-      Navigator.of(context).pop(Expense(
-          id: 'e5',
+      
+      final expense = Expense(
           title: _enteredTitle,
           price: _enteredPrice,
           description: _enteredDescription,
           category: _selectedCategory,
           carId: widget.carId,
-          createdAt: DateTime.now(),
-          odo: _enteredOdo));
+          odo: _enteredOdo);
+      
+      DatabaseReference databaseRef =
+          FirebaseDatabase.instance.ref('expenses').child(widget.carId).child(expense.id);
+      await databaseRef.set({
+        "id": expense.id,
+        "title": _selectedCategory == Category.gas ? '' : _enteredTitle,
+        "price": _enteredPrice,
+        "description": _enteredDescription,
+        "category": _selectedCategory.toString(),
+        "carId": widget.carId,
+        "createdAt": DateTime.now().toIso8601String(),
+        "odo": _enteredOdo,
+        "litre": _selectedCategory == Category.gas ? _enteredLitre : 0
+      });
+
+      Navigator.of(context).pop(expense);
     }
-    return;
   }
 
   @override
@@ -73,23 +76,24 @@ class _NewExpenseState extends State<NewExpenseScreen> {
                       });
                     },
                   ),
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    decoration: const InputDecoration(label: Text('Title')),
-                    validator: (value) {
-                      if (value == null ||
-                          value.trim().isEmpty ||
-                          value.trim().length < 3) {
-                        return 'Please enter at least 3 character.';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      setState(() {
-                        _enteredTitle = value!;
-                      });
-                    },
-                  ),
+                  if (_selectedCategory != Category.gas)
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      decoration: const InputDecoration(label: Text('Title')),
+                      validator: (value) {
+                        if (value == null ||
+                            value.trim().isEmpty ||
+                            value.trim().length < 3) {
+                          return 'Please enter at least 3 character.';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          _enteredTitle = value!;
+                        });
+                      },
+                    ),
                   TextFormField(
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),

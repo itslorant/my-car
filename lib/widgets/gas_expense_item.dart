@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:my_car/models/gas_expense.dart';
+import 'package:my_car/models/expense.dart';
 
 class GasExpenseItem extends StatelessWidget {
   const GasExpenseItem({super.key, required this.expense});
 
-  final GasExpense expense;
+  final Expense expense;
 
   @override
   Widget build(BuildContext context) {
