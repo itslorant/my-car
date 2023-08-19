@@ -1,11 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:my_car/models/car.dart';
 import 'package:my_car/screens/add_car.dart';
-import 'package:my_car/screens/auth.dart';
 import 'package:my_car/widgets/cars_list.dart';
 
+final _firebaseAuth = FirebaseAuth.instance;
 class CarsScreen extends StatefulWidget {
   const CarsScreen({super.key});
 
@@ -17,7 +18,8 @@ class _CarsState extends State<CarsScreen> {
   List<Car> carList = [];
   Future<void> _getCars() async {
     carList.clear();
-    final databaseRef = FirebaseDatabase.instance.ref('cars');
+    final userId = _firebaseAuth.currentUser!.uid;
+    final databaseRef = FirebaseDatabase.instance.ref('cars').child(userId);
     DataSnapshot snapshot = await databaseRef.get();
     for (final car in snapshot.children) {
       final id = car.child('id').value.toString();

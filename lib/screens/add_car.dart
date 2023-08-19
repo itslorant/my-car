@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -33,7 +34,8 @@ class _AddCarState extends State<AddCar> {
       await storageRef.putFile(_selectedImage!);
       final imageUrl = await storageRef.getDownloadURL();
 
-      DatabaseReference databaseRef = FirebaseDatabase.instance.ref('cars').child(carId);
+      final userId = FirebaseAuth.instance.currentUser!.uid;
+      DatabaseReference databaseRef = FirebaseDatabase.instance.ref('cars').child(userId).child(carId);
       await databaseRef.set({
         "id": carId,
         "brand": _enteredBrand,
